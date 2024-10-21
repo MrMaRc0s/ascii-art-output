@@ -3,18 +3,18 @@ package main
 import (
 	"fmt"
 	"os"
-	"regexp"
 	"strings"
 )
 
 func main() {
-	// Ensure correct argument usage
-	if len(os.Args) < 3 || len(os.Args) > 4 {
+	// check for correct format type
+	if len(os.Args) < 2 || len(os.Args) > 4 {
 		fmt.Println("Usage: go run . [OPTION] [STRING] [BANNER(optional)]\n EX: go run . --output=<fileName.txt> something standard")
 		os.Exit(1)
 	}
 
-	var banner string
+	banner := "banner/standard.txt"
+	// banner selection
 	if len(os.Args) == 4 {
 		banner = os.Args[3]
 		switch banner {
@@ -30,33 +30,23 @@ func main() {
 		}
 	}
 
-	if len(os.Args) == 3 {
-		banner = "banner/standard.txt"
-	}
-
-	re := regexp.MustCompile(`--output=([A-z]+).txt`)
-
-	flag := os.Args[1]
-
-	if !re.MatchString(flag) {
-		fmt.Println("Must contain alpha characters only and/or use --output flag")
-		os.Exit(3)
-	}
-
-	// Read the file
-	bannerFile, err := os.ReadFile(banner)
+	// read file
+	file, err := os.ReadFile(banner)
 	if err != nil {
-		fmt.Println("There was a problem reading the banner file template")
-		os.Exit(4)
+		fmt.Println("Error reading file:", err)
+		return
+	}
+	if len(os.Args) == 2 { // if only string argument
+		fmt.Println(GenerateArt(file, os.Args[1]))
+		os.Exit(0)
 	}
 
-	// Split the lines of the file into a slice
-	line := strings.Replace(string(bannerFile), "\r\n", "\n", -1)
-	lines := strings.Split(line, "\n")
-
-	// Split the input string into lines, based on literal newline characters
-	sepText := strings.Split(os.Args[2], "\\n") // Handling literal "\n" from the input
-
-	// Print the ASCII Art based on the input
-	PrintAsciiArtRecursive(sepText, lines)
+	// write to output file
+	output := GenerateArt(file, os.Args[2])
+	flag := os.Args[1]
+	if strings.Contains(flag, "--output=") {
+		name := strings.Split(flag, "=")[1]
+		os.WriteFile(name, []byte(output), 0o644)
+		fmt.Println("Writing to file completed")
+	}
 }

@@ -34,20 +34,20 @@ func TestMainWithVariousStrings(t *testing.T) {
 		args []string
 	}{
 		{
-			name: "Try passing 'hello' as an argument.",
-			args: []string{"cmd", "hello"},
+			name: "Try passing as arguments  --output=test00.txt 'First\nTest' shadow",
+			args: []string{"cmd", "--output=test00.txt 'First\nTest' shadow"},
 		},
 		{
-			name: "Try passing 'HELLO' as an argument.",
-			args: []string{"cmd", "HELLO"},
+			name: "Try passing as arguments 'hello' standard --output=test01.txt",
+			args: []string{"cmd", "'hello' standard --output=test01.txt"},
 		},
 		{
-			name: "Try passing 'HeLlo HuMaN' as an argument.",
-			args: []string{"cmd", "HeLlo HuMaN"},
+			name: "Try passing as arguments '123 -> #$%' standard --output=test02.txt",
+			args: []string{"cmd", "'123 -> #$%' standard --output=test02.txt"},
 		},
 		{
-			name: "Try passing '1Hello 2There' as an argument.",
-			args: []string{"cmd", "1Hello 2There"},
+			name: "Try passing as arguments '432 -> #$%&@' shadow --output=test03.txt",
+			args: []string{"cmd", "'432 -> #$%&@' shadow --output=test03.txt"},
 		},
 		{
 			name: "Try passing 'Hello\\nThere' as an argument.",
